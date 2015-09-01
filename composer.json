@@ -1,0 +1,15 @@
+{
+  "name": "smallbearsoft/yii2-ajax",
+  "description": "This is a ajax widget of yii2 which will generate a div. The link click or form submission (for those link and form with data-ajax attribute) in this div will trigger an AJAX request.",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fangxin Jiang",
+      "email": "2497085409@qq.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "2.0.6"
+  }
+}
