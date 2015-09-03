@@ -2,6 +2,7 @@
     "name": "smallbearsoft/yii2-ajax",
     "description": "This is a ajax widget of yii2 which will generate a div. The link click or form submission (for those link and form with data-ajax attribute) in this div will trigger an AJAX request.",
     "keywords": ["yii2-ajax", "extension", "ajax", "widget"],
+    "type": "yii2-extension",
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
@@ -14,6 +15,11 @@
         "php": ">=5.4.0",
         "yiisoft/yii2": "*",
         "bower-asset/jquery": ">=1.9.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "smallbearsoft\\ajax\\": ""
+        }
     },
     "extra": {
         "asset-installer-paths": {
