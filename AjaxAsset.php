@@ -14,7 +14,7 @@ use yii\web\AssetBundle;
  */
 class AjaxAsset extends AssetBundle
 {
-   	public $sourcePath = '@vendor/smallbearsoft/yii2-ajax/js';
+    public $sourcePath = '@vendor/smallbearsoft/yii2-ajax/js';
     public $js = [
         'ajaxHelper.js',
     ];
