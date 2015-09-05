@@ -1,8 +1,6 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * Author: Fangxin Jiang
  */
 
 namespace smallbearsoft\ajax;
@@ -10,15 +8,13 @@ namespace smallbearsoft\ajax;
 use yii\web\AssetBundle;
 
 /**
- * This asset bundle provides the javascript files required by [[Pjax]] widget.
+ * This asset bundle provides the javascript files required by [[Ajax]] widget.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * @author Fangxin Jiang <2497085409@qq.com>
  */
 class AjaxAsset extends AssetBundle
 {
-//    public $sourcePath = '@vendor/smallbearsoft/yii2-ajax/js';
-    public $sourcePath = '@app/smallbearsoft/yii2-ajax/js';
+   	public $sourcePath = '@vendor/smallbearsoft/yii2-ajax/js';
     public $js = [
         'ajaxHelper.js',
     ];
