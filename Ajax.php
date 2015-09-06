@@ -112,7 +112,7 @@ class Ajax extends Widget
      * ");
      *
      * Ajax::begin([
-     *     'url' => new JsExpression('myGetUrl(this)');
+     *     'url' => new JsExpression('myGetUrl(this)')
      * ]);
      * ...
      * Ajax::end();
