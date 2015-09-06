@@ -44,6 +44,7 @@ use smallbearsoft\ajax\AjaxAsset;
  * people.php
  * ```php
  * use smallbearsoft\ajax\Ajax;
+ * use yii\helpers\Url;
  *
  * Ajax::begin([
  *     'success' => 'function(data, textStatus, jqXHR) {alert(data)}'
