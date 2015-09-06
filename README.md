@@ -2,6 +2,8 @@
 This is a ajax widget of yii2 which will generate a div. The link click or form submission (for those link and form with 
 `data-ajax` attribute) in this div will trigger an AJAX request.
 
+
+
 ## Simple example for link
 We can get some data through ajax link. First, we should have a controller and an action to render our view. Of course, 
 we can just use `SiteController` as our controller. Then we write an action in SiteController named `actionLink` to 
@@ -34,13 +36,13 @@ link.php
 use smallbearsoft\ajax\Ajax;
 use yii\helpers\Url;
 
-<?php Ajax::begin([
+Ajax::begin([
     'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
     'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
     'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
     'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
 ]) ?>
-    <a href="<?= Url::to(['site/response']) ?>" data-ajax="1">This is a link.</a>
+    <a href="<?= Url::to(['site/response']) ?>" data-ajax="1">This is an ajax link.</a>
 <?php Ajax::end() ?>
 ```
 
@@ -82,7 +84,7 @@ form.php
 use smallbearsoft\ajax\Ajax;
 use yii\helpers\Url;
 
-<?php Ajax::begin([
+Ajax::begin([
     'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
     'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
     'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
@@ -97,7 +99,10 @@ use yii\helpers\Url;
 ```
 
 Actually you can use Ajax widget to upload files, just add an input like `<input type="file" name="image"/>`. You will 
-see your file in $_FILES on server.
+see your file in `$_FILES` on server.
+
+## Advanced use
+See [Advanced use.md](https://github.com/smallbearsoft/yii2-ajax/wiki/Advanced-use) for more advanced usage.
 
 ## Installation
 The preferred way to install this extension is through composer.
@@ -105,7 +110,7 @@ The preferred way to install this extension is through composer.
 Either run
 
 ```
-php composer.phar require smallbearsoft/yii2-ajax "*"
+composer require smallbearsoft/yii2-ajax:*
 ```
 
 or add

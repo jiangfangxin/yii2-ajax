@@ -26,40 +26,54 @@ use smallbearsoft\ajax\AjaxAsset;
  *
  * The following example shows how to use Ajax to submit a form. To make it simple there will not use ActiveForm widget.
  *
- * siteController.php
+ * SiteController.php
  * ```php
- * public function actionPeople() {
- *     return $this->render('people');
+ * <?php
+ *
+ * namespace app\controllers;
+ *
+ * use Yii;
+ * use yii\web\Controller;
+ *
+ * public function actionForm()
+ * {
+ *     return $this->render('form');
  * }
  *
- * public function actionPost() {
+ * public function actionPost()
+ * {
  *     if(isset($_POST['name']) && isset($_POST['age'])) {
- *         return 'Name is ' . $_POST['name'] . '. Age is ' . $_POST['age'];
+ *         $name = $_POST['name'];
+ *         $age = $_POST['age'];
+ *         return "Success, name is $name and age is $age.";
  *     } else {
- *         return 'Can't get the post data!';
+ *         return 'Success, bat we can not get the name and age.';
  *     }
  * }
  * ```
  *
- * people.php
+ * form.php
  * ```php
+ * <?php
+ *
  * use smallbearsoft\ajax\Ajax;
  * use yii\helpers\Url;
  *
  * Ajax::begin([
- *     'success' => 'function(data, textStatus, jqXHR) {alert(data)}'
- * ]);
- *
- * <form action="<?= Url::to(['site/people'])?>" method="post" data-ajax="1">
- *     <input type="text" name="name" value="Fangxin Jiang"/>
- *     <input type="text" name="age" value="22"/>
- *     <input type="submit" value="Submit"/>
- * </form>
- *
- * Ajax::end();
+ *     'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
+ *     'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
+ *     'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
+ *     'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
+ * ]) ?>
+ *     <form action="<?= Url::to(['site/post'])?>" method="post" data-ajax="1">
+ *         <input type="text" name="name" value="Fangxin Jiang"/>
+ *         <input type="text" name="age" value="22"/>
+ *         <input type="submit" value="Submit"/>
+ *     </form>
+ * <?php Ajax::end() ?>
  * ```
  *
- * @author Fangxin Jiang
+ * @author Fangxin Jiang <2497085409@qq.com>
  */
 class Ajax extends Widget
 {
@@ -93,14 +107,14 @@ class Ajax extends Widget
      *
      * $this->registerJs("
      *     function myGetUrl(elem) {
-     *         ~~~
+     *         ...
      *     }
      * ");
      *
      * Ajax::begin([
      *     'url' => new JsExpression('myGetUrl(this)');
      * ]);
-     * ~~~
+     * ...
      * Ajax::end();
      * ```
      */
