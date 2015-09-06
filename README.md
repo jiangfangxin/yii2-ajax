@@ -2,29 +2,30 @@
 This is a ajax widget of yii2 which will generate a div. The link click or form submission (for those link and form with 
 `data-ajax` attribute) in this div will trigger an AJAX request.
 
-# Simple example for link
+## Simple example for link
 We can get some data through ajax link. First, we should have a controller and an action to render our view. Of course, 
 we can just use `SiteController` as our controller. Then we write an action in SiteController named `actionLink` to 
 render link.php. In addition, add `actionResponse` action to response ajax request of ajax link:
 
 SiteController.php
+```php
+<?php
 
-    <?php
-    
-    namespace app\controllers;
-    
-    use Yii;
-    use yii\web\Controller;
-    
-    public function actionLink()
-    {
-        return $this->render('link');
-    }
-    
-    public function actionResponse()
-    {
-        return 'Success, this is your data.';
-    }
+namespace app\controllers;
+
+use Yii;
+use yii\web\Controller;
+
+public function actionLink()
+{
+    return $this->render('link');
+}
+
+public function actionResponse()
+{
+    return 'Success, this is your data.';
+}
+```
 
 link.php
 
@@ -42,7 +43,7 @@ link.php
         <a href="<?= Url::to(['site/response']) ?>" data-ajax="1">This is a link.</a>
     <?php Ajax::end() ?>
 
-# Simple example for form
+## Simple example for form
 If you want to use ajax to post a form to server, you can use this Ajax widget make it essay. We will still use 
 `SiteController` as our controller. Then we add two actions `actionForm` and `actionPost`. To make it simple, we will 
 not use `ActiveForm` widget, but you can use that in your code:
@@ -95,7 +96,7 @@ form.php
 Actually you can use Ajax widget to upload files, just add an input like `<input type="file" name="image"/>`. You will 
 see your file in $_FILES on server.
 
-# Installation
+## Installation
 The preferred way to install this extension is through composer.
 
 Either run
