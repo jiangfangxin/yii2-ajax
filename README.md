@@ -28,20 +28,21 @@ public function actionResponse()
 ```
 
 link.php
+```php
+<?php
 
-    <?php
-    
-    use smallbearsoft\ajax\Ajax;
-    use yii\helpers\Url;
-    
-    <?php Ajax::begin([
-        'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
-        'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
-        'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
-        'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
-    ]) ?>
-        <a href="<?= Url::to(['site/response']) ?>" data-ajax="1">This is a link.</a>
-    <?php Ajax::end() ?>
+use smallbearsoft\ajax\Ajax;
+use yii\helpers\Url;
+
+<?php Ajax::begin([
+    'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
+    'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
+    'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
+    'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
+]) ?>
+    <a href="<?= Url::to(['site/response']) ?>" data-ajax="1">This is a link.</a>
+<?php Ajax::end() ?>
+```
 
 ## Simple example for form
 If you want to use ajax to post a form to server, you can use this Ajax widget make it essay. We will still use 
@@ -49,49 +50,51 @@ If you want to use ajax to post a form to server, you can use this Ajax widget m
 not use `ActiveForm` widget, but you can use that in your code:
 
 SiteController.php
+```php
+<?php
 
-    <?php
-    
-    namespace app\controllers;
-    
-    use Yii;
-    use yii\web\Controller;
-    
-    public function actionForm()
-    {
-        return $this->render('form');
+namespace app\controllers;
+
+use Yii;
+use yii\web\Controller;
+
+public function actionForm()
+{
+    return $this->render('form');
+}
+
+public function actionPost()
+{
+    if(isset($_POST['name']) && isset($_POST['age'])) {
+        $name = $_POST['name'];
+        $age = $_POST['age'];
+        return "Success, name is $name and age is $age.";
+    } else {
+        return 'Success, bat we can not get the name and age.';
     }
-    
-    public function actionPost()
-    {
-        if(isset($_POST['name']) && isset($_POST['age'])) {
-            $name = $_POST['name'];
-            $age = $_POST['age'];
-            return "Success, name is $name and age is $age.";
-        } else {
-            return 'Success, bat we can not get the name and age.';
-        }
-    }
+}
+```
 
 form.php
+```php
+<?php
 
-    <?php
-    
-    use smallbearsoft\ajax\Ajax;
-    use yii\helpers\Url;
-    
-    <?php Ajax::begin([
-        'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
-        'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
-        'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
-        'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
-    ]) ?>
-        <form action="<?= Url::to(['site/post'])?>" method="post" data-ajax="1">
-            <input type="text" name="name" value="Fangxin Jiang"/>
-            <input type="text" name="age" value="22"/>
-            <input type="submit" value="Submit"/>
-        </form>
-    <?php Ajax::end() ?>
+use smallbearsoft\ajax\Ajax;
+use yii\helpers\Url;
+
+<?php Ajax::begin([
+    'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
+    'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
+    'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
+    'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
+]) ?>
+    <form action="<?= Url::to(['site/post'])?>" method="post" data-ajax="1">
+        <input type="text" name="name" value="Fangxin Jiang"/>
+        <input type="text" name="age" value="22"/>
+        <input type="submit" value="Submit"/>
+    </form>
+<?php Ajax::end() ?>
+```
 
 Actually you can use Ajax widget to upload files, just add an input like `<input type="file" name="image"/>`. You will 
 see your file in $_FILES on server.
@@ -101,10 +104,14 @@ The preferred way to install this extension is through composer.
 
 Either run
 
+```
 php composer.phar require smallbearsoft/yii2-ajax "*"
+```
 
 or add
 
+```
 "smallbearsoft/yii2-ajax": "*"
+```
 
 to the require section of your composer.json file.
