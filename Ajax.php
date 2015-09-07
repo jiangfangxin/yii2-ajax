@@ -93,112 +93,10 @@ class Ajax extends Widget
      */
     public $formSelector;
     /**
-     * @var string This is to set the jQuery Ajax url param.
-     * If set, all link and form with `data-ajax` within the enclosed content of Ajax will use this url as the jQuery Ajax url's value.
-     * If not set, a javascript method `ajaxHelper.getUrl(this)` will be setted as the value of the jQuery Ajax url.
-     * For link, the `ajaxHelper.getUrl(this)` method will return the `href` attribute's value as jQuery Ajax url's value.
-     * For form, the `ajaxHelper.getUrl(this)` method will return the `action` attribute's value as jQuery Ajax url's value.
-     * If both `href` and `action` are not set, the `ajaxHelper.getUrl(this)` method will return null.
-     * Besides, you can use your custom method to replace `ajaxHelper.getUrl(this)` method. You can define a method refer
-     * to `ajaxHelper.getUrl(this)` in ajaxHelper.js. For example:
-     * ```php
-     * use smallbearsoft\ajax\Ajax;
-     * use yii\web\JsExpression;
-     *
-     * $this->registerJs("
-     *     function myGetUrl(elem) {
-     *         ...
-     *     }
-     * ");
-     *
-     * Ajax::begin([
-     *     'url' => new JsExpression('myGetUrl(this)')
-     * ]);
-     * ...
-     * Ajax::end();
-     * ```
-     */
-    public $url;
-    /**
-     * @var string `GET` or `POST`. Refer to the jQuery Ajax method param.
-     * If not set, a javascript method `ajaxHelper.getMethod(this)` will be setted as the value of the jQuery Ajax method.
-     * For link, the `ajaxHelper.getMethod(this)` method will return the `ajax-method` attribute's value as jQuery Ajax method's value.
-     * For form, the `ajaxHelper.getMethod(this)` method will return the `method` attribute's value as jQuery Ajax method's value.
-     * If both `ajax-method` and `method` are not set, the `ajaxHelper.getMethod(this)` method will return "GET" for link, "POST" for from.
-     * Besides, you can use your custom method to replace `ajaxHelper.getMethod(this)` method. You can define a method refer
-     * to `ajaxHelper.getMethod(this)` in ajaxHelper.js.
-     */
-    public $method;
-    /**
-     * @var string|array|object This can be a string, json object or FormData object. Refer to the jQuery Ajax data param.
-     * Recommend you to use string like `name=Fangxin Jiang&age=22` as data's value, if you want to transfer some data.
-     * If not set, a javascript method `ajaxHelper.getData(this)` will be setted as the value of the jQuery Ajax data.
-     * For link, the `ajaxHelper.getData(this)` method will return the `ajax-data` attribute's value as jQuery Ajax data's value.
-     * For form, the `ajaxHelper.getData(this)` method will return a FormData object as jQuery Ajax data's value.
-     * If `ajax-data` is not set, the `ajaxHelper.getData(this)` method will return null.
-     * Besides, you can use your custom method to replace `ajaxHelper.getData(this)` method. You can define a method refer
-     * to `ajaxHelper.getData(this)` in ajaxHelper.js.
-     */
-    public $data;
-    /**
-     * @var string The type of data that you're expecting back from the server. Value can be `text`, `xml`, `json`,
-     * `script`, `html` or `jsonp`. Refer to the jQuery Ajax dataType param.
-     * If not set, a javascript method `ajaxHelper.getDataType(this)` will be setted as the value of the jQuery Ajax dataType.
-     * For both link and form, the `ajaxHelper.getDataType(this)` method will return the `ajax-dataType` attribute's value
-     * as jQuery Ajax dataType's value.
-     * If `ajax-dataType` is not set, the `ajaxHelper.getDataType(this)` method will return null. And so, jQuery will try
-     * to infer the back data based on the MIME type of the response.
-     * Besides, you can use your custom method to replace `ajaxHelper.getDataType(this)` method. You can define a method refer
-     * to `ajaxHelper.getDataType(this)` in ajaxHelper.js.
-     */
-    public $dataType;
-    /**
-     * @var boolean Whether process and transform object data to query string. Refer to the jQuery Ajax processData param.
-     * If not set, a javascript method `ajaxHelper.getProcessData(this)` will be setted as the value of the jQuery Ajax processData.
-     * For form, the `ajaxHelper.getProcessData(this)` method will return false as jQuery Ajax processData's value. That's
-     * because we use FormData object to collect form's inputs by default, and set the FormData object as jQuery Ajax data's value.
-     * We needn't process and transfer this data. So we should set false as jQuery Ajax processData's value.
-     * Besides, you can use your custom method to replace `ajaxHelper.getProcessData(this)` method. You can define a method
-     * refer to `ajaxHelper.getProcessData(this)` in ajaxHelper.js.
-     */
-    public $processData;
-    /**
-     * @var string|boolean When sending data to the server, use this content type. Refer to the jQuery Ajax contentType param.
-     * If not set, a javascript method `ajaxHelper.getContentType(this)` will be setted as the value of the jQuery Ajax contentType.
-     * For form, the `ajaxHelper.getContentType(this)` method will return false as jQuery Ajax contentType's value.
-     * Besides, you can use your custom method to replace `ajaxHelper.getContentType(this)` method. You can define a method
-     * refer to `ajaxHelper.getContentType(this)` in ajaxHelper.js.
-     */
-    public $contentType;
-    /**
-     * @var string This string is a javascript function. Refer to the jQuery Ajax success param.
-     */
-    public $success;
-    /**
-     * @var string This string is a javascript function. Refer to the jQuery Ajax error param.
-     */
-    public $error;
-    /**
-     * @var string This string is a javascript function. Refer to the jQuery Ajax beforeSend param.
-     */
-    public $beforeSend;
-    /**
-     * @var string This string is a javascript function. Refer to the jQuery Ajax complete param.
-     */
-    public $complete;
-    /**
-     * @var Boolean Whether browser buffer requested pages. Refer to the jQuery Ajax cache param.
-     */
-    public $cache;
-    /**
-     * @var Number Set a timeout (in milliseconds) for the request. Refer to the jQuery Ajax timeout param.
-     */
-    public $timeout;
-    /**
-     * @var array Additional options to be passed to the jQuery Ajax. Please refer to the
+     * @var array Options to be passed to the jQuery Ajax. Please refer to the
      * [jQuery Ajax](http://api.jquery.com/jQuery.ajax/) for available options.
      */
-    public $clientOptions;
+    public $clientOptions = [];
 
     /**
      * @inheritdoc
@@ -225,29 +123,31 @@ class Ajax extends Widget
      * @return string Json Object.
      */
     public function generateClientOptions() {
-        if(isset($this->clientOptions['url'])) {
-            if($this->clientOptions['url'] instanceof JsExpression) {
-                $this->clientOptions['url'] = new JsExpression('ajaxHelper.getUrl(this) | ' . $this->clientOptions['url']);
+        $helpers = [
+            'url' => 'ajaxHelper.getUrl(this)',                 //`ajax-url|href|action`
+            'method' => 'ajaxHelper.getMethod(this)',           //`ajax-method|method`
+            'data' => 'ajaxHelper.getData(this)',               //`ajax-data`
+            'dataType' => 'ajaxHelper.getDataType(this)',       //`ajax-dataType`
+            'processData' => 'ajaxHelper.getProcessData(this)', //`ajax-processData`
+            'contentType' => 'ajaxHelper.getContentType(this)', //`ajax-contentType`
+            'success' => 'ajaxHelper.getSuccess(this)',         //`ajax-success`
+            'error' => 'ajaxHelper.getError(this)',             //`ajax-error`
+            'beforeSend' => 'ajaxHelper.getBeforeSend(this)',   //`ajax-beforeSend`
+            'complete' => 'ajaxHelper.getComplete(this)',       //`ajax-complete`
+            'cache' => 'ajaxHelper.getCache(this)',             //`ajax-cache`
+            'timeout' => 'ajaxHelper.getTimeout(this)'          //`ajax-timeout`
+        ];
+        foreach($helpers as $key => $method) {
+            if(isset($this->clientOptions[$key])) {
+                if($this->clientOptions[$key] instanceof JsExpression) {
+                    $this->clientOptions[$key] = new JsExpression($method . ' | ' . $this->clientOptions[$key]);
+                } else {
+                    $this->clientOptions[$key] = new JsExpression($method . ' | "' . $this->clientOptions[$key] . '"');
+                }
             } else {
-                $this->clientOptions['url'] = new JsExpression('ajaxHelper.getUrl(this) | "' . $this->clientOptions['url'] . '"');
+                $this->clientOptions[$key] = new JsExpression($method);
             }
-        } else {
-            $this->clientOptions['url'] = new JsExpression('ajaxHelper.getUrl(this)');
         }
-
-
-//        $this->clientOptions['method'] = new JsExpression('ajaxHelper.getMethod(this)');
-//        $this->clientOptions['data'] = new JsExpression('ajaxHelper.getData(this)');
-//        $this->clientOptions['dataType'] = new JsExpression('ajaxHelper.getDataType(this)');
-//        $this->clientOptions['processData'] = new JsExpression('ajaxHelper.getProcessData(this)');
-//        $this->clientOptions['contentType'] = new JsExpression('ajaxHelper.getContentType(this)');
-//        $this->clientOptions['success'] = new JsExpression('ajaxHelper.getSuccess(this)');
-//        $this->clientOptions['error'] = new JsExpression('ajaxHelper.getError(this)');
-//        $this->clientOptions['beforeSend'] = new JsExpression('ajaxHelper.getBeforeSend(this)');
-//        $this->clientOptions['complete'] = new JsExpression('ajaxHelper.getComplete(this)');
-//        $this->clientOptions['cache'] = new JsExpression('ajaxHelper.getCache(this)');
-//        $this->clientOptions['timeout'] = new JsExpression('ajaxHelper.getTimeout(this)');
-
         return Json::encode($this->clientOptions);
     }
 
@@ -263,7 +163,7 @@ class Ajax extends Widget
         $view = $this->getView();
         JqueryAsset::register($view);
         AjaxAsset::register($view);
-        $js = "\njQuery('$linkSelector').click(function() {\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
+        $js = "jQuery('$linkSelector').click(function() {\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
         $js .= "\njQuery(document).on('submit', '$formSelector', function() {\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
         $view->registerJs($js);
     }

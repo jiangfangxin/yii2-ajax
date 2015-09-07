@@ -48,29 +48,22 @@ var ajaxHelper = {
         return tag == "form" ? false : null;
     },
     getSuccess: function(elem) {
-        //var str = $(elem).attr("ajax-success");
-        //if(str) {
-        //    return eval(str);
-        //} else if() {
-        //
-        //} else {
-        //
-        //}
+        return $(elem).attr("ajax-success") ? eval("(false || " + $(elem).attr("ajax-success") + ")") : null;
     },
     getError: function(elem) {
-
+        return $(elem).attr("ajax-error") ? eval("(false || " + $(elem).attr("ajax-error") + ")") : null;
     },
     getBeforeSend: function(elem) {
-
+        return $(elem).attr("ajax-beforeSend") ? eval("(false || " + $(elem).attr("ajax-beforeSend") + ")") : null;
     },
     getComplete: function(elem) {
-
+        return $(elem).attr("ajax-complete") ? eval("(false || " + $(elem).attr("ajax-complete") + ")") : null;
     },
     getCache: function(elem) {
-
+        return $(elem).attr("ajax-cache") ? eval("(false || " + $(elem).attr("ajax-cache") + ")") : null;
     },
     getTimeout: function(elem) {
-
+        return $(elem).attr("ajax-timeout") ? eval("(false || " + $(elem).attr("ajax-timeout") + ")") : null;
     },
     filter: function(json) {
         var result = {};
