@@ -3,8 +3,6 @@
  * Date: 2015-8-27
  */
 var ajaxHelper = {
-    global: {},
-    options: {},
     getUrl: function(elem) {
         var tag = elem.tagName.toLowerCase();
         switch(tag) {
