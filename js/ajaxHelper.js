@@ -13,7 +13,7 @@ var ajaxHelper = {
                 var url = $(elem).attr("action") ? $(elem).attr("action") : null;
                 break;
             default :
-                var url = null;
+                var url = $(elem).attr("ajax-url") ? $(elem).attr("ajax-url") : null;
                 break;
         }
         return url;
