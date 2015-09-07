@@ -247,16 +247,15 @@ class Ajax extends Widget
     public function registerClientScript()
     {
         $id = $this->options['id'];
-        $global = Json::encode($this->clientOptions);
+        $global = $this->clientOptions ? Json::encode($this->clientOptions) : '{}';
         $options = $this->generateClientOptions();
         $linkSelector = $this->linkSelector !== null ? $this->linkSelector : '#' . $id . ' *[data-ajax]:not(form)';
         $formSelector = $this->formSelector !== null ? $this->formSelector : '#' . $id . ' form[data-ajax]';
         $view = $this->getView();
         JqueryAsset::register($view);
         AjaxAsset::register($view);
-        $js = "ajaxHelper.global=$global;ajaxHelper.options=$options;";
-        $js .= "\njQuery('$linkSelector').click(function() {jQuery.ajax(ajaxHelper.filter(ajaxHelper.options));return false;});";
-        $js .= "\njQuery(document).on('submit', '$formSelector', function() {jQuery.ajax(ajaxHelper.filter(ajaxHelper.options));return false;});";
+        $js = "\njQuery('$linkSelector').click(function() {\nvar global=$global;\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
+        $js .= "\njQuery(document).on('submit', '$formSelector', function() {\nvar global=$global;\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
         $view->registerJs($js);
     }
 }
