@@ -225,7 +225,17 @@ class Ajax extends Widget
      * @return string Json Object.
      */
     public function generateClientOptions() {
-        $this->clientOptions['url'] = new JsExpression('ajaxHelper.getUrl(this)');
+        if(isset($this->clientOptions['url'])) {
+            if($this->clientOptions['url'] instanceof JsExpression) {
+                $this->clientOptions['url'] = new JsExpression('ajaxHelper.getUrl(this) | ' . $this->clientOptions['url']);
+            } else {
+                $this->clientOptions['url'] = new JsExpression('ajaxHelper.getUrl(this) | "' . $this->clientOptions['url'] . '"');
+            }
+        } else {
+            $this->clientOptions['url'] = new JsExpression('ajaxHelper.getUrl(this)');
+        }
+
+
 //        $this->clientOptions['method'] = new JsExpression('ajaxHelper.getMethod(this)');
 //        $this->clientOptions['data'] = new JsExpression('ajaxHelper.getData(this)');
 //        $this->clientOptions['dataType'] = new JsExpression('ajaxHelper.getDataType(this)');
@@ -247,14 +257,13 @@ class Ajax extends Widget
     public function registerClientScript()
     {
         $id = $this->options['id'];
-        $global = $this->clientOptions ? Json::encode($this->clientOptions) : '{}';
         $options = $this->generateClientOptions();
         $linkSelector = $this->linkSelector !== null ? $this->linkSelector : '#' . $id . ' *[data-ajax]:not(form)';
         $formSelector = $this->formSelector !== null ? $this->formSelector : '#' . $id . ' form[data-ajax]';
         $view = $this->getView();
         JqueryAsset::register($view);
         AjaxAsset::register($view);
-        $js = "\njQuery('$linkSelector').click(function() {\nvar global=$global;\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
+        $js = "\njQuery('$linkSelector').click(function() {\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
         $js .= "\njQuery(document).on('submit', '$formSelector', function() {\nvar global=$global;\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
         $view->registerJs($js);
     }

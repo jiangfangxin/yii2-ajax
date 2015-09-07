@@ -16,7 +16,6 @@ var ajaxHelper = {
                 var url = $(elem).attr("ajax-url") ? $(elem).attr("ajax-url") : null;
                 break;
         }
-        if(url == null && this.global.hasOwnProperty("url")) url = this.global.url;
         return url;
     },
     getMethod: function(elem) {
