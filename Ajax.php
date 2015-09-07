@@ -225,22 +225,19 @@ class Ajax extends Widget
      * @return string Json Object.
      */
     public function generateClientOptions() {
-        //Following client options can be set both in Ajax::begin() method and html element.
-        $this->clientOptions['url'] = $this->url !== null ? $this->url : new JsExpression('ajaxHelper.getUrl(this)');
-        $this->clientOptions['method'] = $this->method !== null ? $this->method : new JsExpression('ajaxHelper.getMethod(this)');
-        $this->clientOptions['data'] = $this->data !== null ? $this->data : new JsExpression('ajaxHelper.getData(this)');
-        $this->clientOptions['dataType'] = $this->dataType !== null ? $this->dataType : new JsExpression('ajaxHelper.getDataType(this)');
-        $this->clientOptions['processData'] = $this->processData !== null ? $this->processData : new JsExpression('ajaxHelper.getProcessData(this)');
-        $this->clientOptions['contentType'] = $this->contentType !== null ? $this->contentType : new JsExpression('ajaxHelper.getContentType(this)');
+        $this->clientOptions['url'] = new JsExpression('ajaxHelper.getUrl(this)');
+//        $this->clientOptions['method'] = new JsExpression('ajaxHelper.getMethod(this)');
+//        $this->clientOptions['data'] = new JsExpression('ajaxHelper.getData(this)');
+//        $this->clientOptions['dataType'] = new JsExpression('ajaxHelper.getDataType(this)');
+//        $this->clientOptions['processData'] = new JsExpression('ajaxHelper.getProcessData(this)');
+//        $this->clientOptions['contentType'] = new JsExpression('ajaxHelper.getContentType(this)');
+//        $this->clientOptions['success'] = new JsExpression('ajaxHelper.getSuccess(this)');
+//        $this->clientOptions['error'] = new JsExpression('ajaxHelper.getError(this)');
+//        $this->clientOptions['beforeSend'] = new JsExpression('ajaxHelper.getBeforeSend(this)');
+//        $this->clientOptions['complete'] = new JsExpression('ajaxHelper.getComplete(this)');
+//        $this->clientOptions['cache'] = new JsExpression('ajaxHelper.getCache(this)');
+//        $this->clientOptions['timeout'] = new JsExpression('ajaxHelper.getTimeout(this)');
 
-        //Following client options can only set in Ajax::begin(). Which means the following options are global settings for all
-        //elements(with data-ajax attribute) during Ajax::begin() an Ajax::end.
-        if($this->success !== null) $this->clientOptions['success'] = new JsExpression($this->success);
-        if($this->error !== null) $this->clientOptions['error'] = new JsExpression($this->error);
-        if($this->beforeSend !== null) $this->clientOptions['beforeSend'] = new JsExpression($this->beforeSend);
-        if($this->complete !== null) $this->clientOptions['complete'] = new JsExpression($this->complete);
-        if($this->cache !== null) $this->clientOptions['cache'] = $this->cache;
-        if($this->timeout !== null) $this->clientOptions['timeout'] = $this->timeout;
         return Json::encode($this->clientOptions);
     }
 
@@ -250,14 +247,16 @@ class Ajax extends Widget
     public function registerClientScript()
     {
         $id = $this->options['id'];
+        $global = Json::encode($this->clientOptions);
         $options = $this->generateClientOptions();
         $linkSelector = $this->linkSelector !== null ? $this->linkSelector : '#' . $id . ' *[data-ajax]:not(form)';
         $formSelector = $this->formSelector !== null ? $this->formSelector : '#' . $id . ' form[data-ajax]';
         $view = $this->getView();
         JqueryAsset::register($view);
         AjaxAsset::register($view);
-        $js = "jQuery('$linkSelector').click(function() {var options=$options;ajaxHelper.filter(options);jQuery.ajax(options);return false;});";
-        $js .= "\njQuery(document).on('submit', '$formSelector', function() {var options=$options;ajaxHelper.filter(options);jQuery.ajax(options);return false;});";
+        $js = "ajaxHelper.global=$global;ajaxHelper.options=$options;";
+        $js .= "\njQuery('$linkSelector').click(function() {jQuery.ajax(ajaxHelper.filter(ajaxHelper.options));return false;});";
+        $js .= "\njQuery(document).on('submit', '$formSelector', function() {jQuery.ajax(ajaxHelper.filter(ajaxHelper.options));return false;});";
         $view->registerJs($js);
     }
 }

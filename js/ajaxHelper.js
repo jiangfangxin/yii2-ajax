@@ -3,6 +3,8 @@
  * Date: 2015-8-27
  */
 var ajaxHelper = {
+    global: null,
+    options: null,
     getUrl: function(elem) {
         var tag = elem.tagName.toLowerCase();
         switch(tag) {
@@ -16,6 +18,7 @@ var ajaxHelper = {
                 var url = $(elem).attr("ajax-url") ? $(elem).attr("ajax-url") : null;
                 break;
         }
+        if(url == null && this.global.hasOwnProperty("url")) url = this.global.url;
         return url;
     },
     getMethod: function(elem) {
@@ -47,10 +50,36 @@ var ajaxHelper = {
         var tag = elem.tagName.toLowerCase();
         return tag == "form" ? false : null;
     },
+    getSuccess: function(elem) {
+        //var str = $(elem).attr("ajax-success");
+        //if(str) {
+        //    return eval(str);
+        //} else if() {
+        //
+        //} else {
+        //
+        //}
+    },
+    getError: function(elem) {
+
+    },
+    getBeforeSend: function(elem) {
+
+    },
+    getComplete: function(elem) {
+
+    },
+    getCache: function(elem) {
+
+    },
+    getTimeout: function(elem) {
+
+    },
     filter: function(json) {
+        var result = {};
         for(var i in json) {
-            //Delete elements whose value is null.
-            if(json[i] === null) delete json[i];
+            if(json[i] !== null) result[i] = json[i];
         }
+        return result;
     }
 };
