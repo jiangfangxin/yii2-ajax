@@ -251,7 +251,7 @@ class Ajax extends Widget
     {
         $id = $this->options['id'];
         $options = $this->generateClientOptions();
-        $linkSelector = $this->linkSelector !== null ? $this->linkSelector : '#' . $id . ' a[data-ajax]';
+        $linkSelector = $this->linkSelector !== null ? $this->linkSelector : '#' . $id . ' *[data-ajax]:not(form)';
         $formSelector = $this->formSelector !== null ? $this->formSelector : '#' . $id . ' form[data-ajax]';
         $view = $this->getView();
         JqueryAsset::register($view);
