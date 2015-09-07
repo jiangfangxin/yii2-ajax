@@ -264,7 +264,7 @@ class Ajax extends Widget
         JqueryAsset::register($view);
         AjaxAsset::register($view);
         $js = "\njQuery('$linkSelector').click(function() {\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
-        $js .= "\njQuery(document).on('submit', '$formSelector', function() {\nvar global=$global;\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
+        $js .= "\njQuery(document).on('submit', '$formSelector', function() {\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
         $view->registerJs($js);
     }
 }
