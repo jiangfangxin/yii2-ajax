@@ -154,8 +154,9 @@ class Ajax extends Widget
             }
         }
         $default = [
+            'method' => 'ajaxHelper.getMethod_default(this)',
             'processData' => 'ajaxHelper.getProcessData_default(this)',
-            'contentType' => 'ajaxHelper.getContentType_default(this)',
+            'contentType' => 'ajaxHelper.getContentType_default(this)'
         ];
         foreach($default as $key => $method) {
             if(isset($this->clientOptions[$key])) {

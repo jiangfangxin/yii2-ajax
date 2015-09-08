@@ -21,11 +21,15 @@ var ajaxHelper = {
     getMethod: function(elem) {
         var tag = elem.tagName.toLowerCase();
         if(tag == "form") {
-            var method = $(elem).attr("method") ? $(elem).attr("method") : "POST";
+            var method = $(elem).attr("method") ? $(elem).attr("method") : null;
         } else {
-            var method = $(elem).attr("ajax-method") ? $(elem).attr("ajax-method") : "GET";
+            var method = $(elem).attr("ajax-method") ? $(elem).attr("ajax-method") : null;
         }
         return method;
+    },
+    getMethod_default: function(elem) {
+        var tag = elem.tagName.toLowerCase();
+        return tag == "form" ? "POST" : "GET";
     },
     getData: function(elem) {
         var tag = elem.tagName.toLowerCase();
