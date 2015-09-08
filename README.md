@@ -68,7 +68,7 @@ public function actionPost()
         $age = $_POST['age'];
         return "Success, name is $name and age is $age.";
     } else {
-        return 'Success, bat we can not get the name and age.';
+        return 'Success, but we can not get the name and age.';
     }
 }
 ?>
