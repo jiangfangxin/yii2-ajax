@@ -153,6 +153,21 @@ class Ajax extends Widget
                 $this->clientOptions[$key] = new JsExpression($method);
             }
         }
+        $default = [
+            'processData' => 'ajaxHelper.getProcessData_default(this)',
+            'contentType' => 'ajaxHelper.getContentType_default(this)',
+        ];
+        foreach($default as $key => $method) {
+            if(isset($this->clientOptions[$key])) {
+                if(is_string($this->clientOptions[$key])) {
+                    $this->clientOptions[$key] = new JsExpression('"' . $this->clientOptions[$key]. '"||' . $method);
+                } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string type.
+                    $this->clientOptions[$key] = new JsExpression($this->clientOptions[$key] . '||' . $method);
+                }
+            } else {
+                $this->clientOptions[$key] = new JsExpression($method);
+            }
+        }
         return Json::encode($this->clientOptions);
     }
 

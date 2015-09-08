@@ -40,10 +40,19 @@ var ajaxHelper = {
         return $(elem).attr("ajax-dataType") ? $(elem).attr("ajax-dataType") : null;
     },
     getProcessData: function(elem) {
+        return $(elem).attr("ajax-processData") ? eval("(false || " + $(elem).attr("ajax-processData") + ")") : null;
+    },
+    getProcessData_default: function(elem) {
         var tag = elem.tagName.toLowerCase();
         return tag == "form" ? false : null;
     },
     getContentType: function(elem) {
+        var str = $(elem).attr("ajax-contentType");
+        if(!str) return null;
+        var arr = ["true","false","1","0"];
+        return arr.indexOf(str) == -1 ? str : eval("(false || " + str + ")");
+    },
+    getContentType_default: function(elem) {
         var tag = elem.tagName.toLowerCase();
         return tag == "form" ? false : null;
     },
