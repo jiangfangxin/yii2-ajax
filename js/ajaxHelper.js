@@ -68,7 +68,7 @@ var ajaxHelper = {
     filter: function(json) {
         var result = {};
         for(var i in json) {
-            if(json[i] !== null) result[i] = json[i];
+            if(json[i] !== null && json.hasOwnProperty(i)) result[i] = json[i];
         }
         return result;
     }

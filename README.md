@@ -1,13 +1,8 @@
 # yii2-ajax
-This is a ajax widget of yii2 which will generate a div. The link click or form submission (for those link and form with 
-`data-ajax` attribute) in this div will trigger an AJAX request.
-
-
+This is a ajax widget of yii2 which will generate a div. The tags (except form) click or forms submission (for those tags and forms with `data-ajax` attribute) in this div will trigger an ajax request.
 
 ## Simple example for link
-We can get some data through ajax link. First, we should have a controller and an action to render our view. Of course, 
-we can just use `SiteController` as our controller. Then we write an action in SiteController named `actionLink` to 
-render link.php. In addition, add `actionResponse` action to response ajax request of ajax link:
+We can get some data by ajax link useing Ajax widget. First, we should have a controller and an action to render our view. Of course, we can just use `SiteController` as our controller. Then we write an action in `SiteController` named `actionLink` to render link.php. In addition, add `actionResponse` action to response ajax request through ajax link:
 
 SiteController.php
 ```php
@@ -27,6 +22,7 @@ public function actionResponse()
 {
     return 'Success, this is your data.';
 }
+?>
 ```
 
 link.php
@@ -34,22 +30,22 @@ link.php
 <?php
 
 use smallbearsoft\ajax\Ajax;
+use yii\web\JsExpression;
 use yii\helpers\Url;
 
-Ajax::begin([
-    'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
-    'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
-    'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
-    'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
-]) ?>
+Ajax::begin(['clientOptions' => [
+    'success' => new JsExpression('function(data, textStatus, jqXHR) {alert(data)}'),
+    'error' => new JsExpression('function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}'),
+    'beforeSend' => new JsExpression('function(jqXHR, settings) {alert("Before send.")}'),
+    'complete' => new JsExpression('function(jqXHR, textStatus) {alert("Complete.")}'),
+    'timeout' => 10000
+]]) ?>
     <a href="<?= Url::to(['site/response']) ?>" data-ajax="1">This is an ajax link.</a>
 <?php Ajax::end() ?>
 ```
 
 ## Simple example for form
-If you want to use ajax to post a form to server, you can use this Ajax widget make it essay. We will still use 
-`SiteController` as our controller. Then we add two actions `actionForm` and `actionPost`. To make it simple, we will 
-not use `ActiveForm` widget, but you can use that in your code:
+If you want to use ajax to post a form to server, you can use this Ajax widget make it essay. We will still use `SiteController` as our controller. Then we add two actions `actionForm` and `actionPost`. To make it simple, we will not use `ActiveForm` widget, but you can use that in your code:
 
 SiteController.php
 ```php
@@ -75,6 +71,7 @@ public function actionPost()
         return 'Success, bat we can not get the name and age.';
     }
 }
+?>
 ```
 
 form.php
@@ -82,14 +79,16 @@ form.php
 <?php
 
 use smallbearsoft\ajax\Ajax;
+use yii\web\JsExpression;
 use yii\helpers\Url;
 
-Ajax::begin([
-    'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
-    'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
-    'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
-    'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
-]) ?>
+Ajax::begin(['clientOptions' => [
+    'success' => new JsExpression('function(data, textStatus, jqXHR) {alert(data)}'),
+    'error' => new JsExpression('function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}'),
+    'beforeSend' => new JsExpression('function(jqXHR, settings) {alert("Before send.")}'),
+    'complete' => new JsExpression('function(jqXHR, textStatus) {alert("Complete.")}'),
+    'timeout' => 10000
+]]) ?>
     <form action="<?= Url::to(['site/post'])?>" method="post" data-ajax="1">
         <input type="text" name="name" value="Fangxin Jiang"/>
         <input type="text" name="age" value="22"/>
@@ -98,11 +97,10 @@ Ajax::begin([
 <?php Ajax::end() ?>
 ```
 
-Actually you can use Ajax widget to upload files, just add an input like `<input type="file" name="image"/>`. You will 
-see your file in `$_FILES` on server.
+Actually you can also use Ajax widget to upload files, just add an input like `<input type="file" name="image"/>`. You will see your file in `$_FILES` variable on server.
 
-## Advanced use
-See [Advanced use.md](https://github.com/smallbearsoft/yii2-ajax/wiki/Advanced-use) for more advanced usage.
+## More tutorials
+See [Home wiki](https://github.com/smallbearsoft/yii2-ajax/wiki/Home) for more tutorials.
 
 ## Installation
 The preferred way to install this extension is through composer.

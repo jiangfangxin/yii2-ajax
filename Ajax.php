@@ -17,11 +17,11 @@ use smallbearsoft\ajax\AjaxAsset;
 
 /**
  * Ajax is a widget extension of Yii2 which integrating the [jQuery Ajax](http://api.jquery.com/jQuery.ajax/).
- * It can respond the calls of link click and form submission. By default, the link or form you want to use with ajax
- * should add a `data-ajax` attribute. The calls of link and form enclosed between [[begin()]] and [[end()]] will be
- * regard as ajax request.
+ * It can respond the calls of tag (any html tag except from) click and form submission. By default, the tag or form you
+ * want to use with Ajax should add a `data-ajax` attribute. The calls of tag and form enclosed between [[begin()]] and
+ * [[end()]] will be regard as ajax request.
  *
- * You may configure [[linkSelector]] to specify which links should trigger ajax, and configure [[formSelector]]
+ * You may configure [[linkSelector]] to specify which tags should trigger ajax, and configure [[formSelector]]
  * to specify which form submission may trigger ajax.
  *
  * The following example shows how to use Ajax to submit a form. To make it simple there will not use ActiveForm widget.
@@ -57,14 +57,15 @@ use smallbearsoft\ajax\AjaxAsset;
  * <?php
  *
  * use smallbearsoft\ajax\Ajax;
+ * use yii\web\JsExpression;
  * use yii\helpers\Url;
  *
- * Ajax::begin([
- *     'success' => 'function(data, textStatus, jqXHR) {alert(data)}',
- *     'error' => 'function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}',
- *     'beforeSend' => 'function(jqXHR, settings) {alert("Before send.")}',
- *     'complete' => 'function(jqXHR, textStatus) {alert("Complete.")}'
- * ]) ?>
+ * Ajax::begin(['clientOptions' => [
+ *     'success' => new JsExpression('function(data, textStatus, jqXHR) {alert(data)}'),
+ *     'error' => new JsExpression('function(jqXHR, textStatus, errorThrown) {alert(errorThrown)}'),
+ *     'beforeSend' => new JsExpression('function(jqXHR, settings) {alert("Before send.")}'),
+ *     'complete' => new JsExpression('function(jqXHR, textStatus) {alert("Complete.")}')
+ * ]]) ?>
  *     <form action="<?= Url::to(['site/post'])?>" method="post" data-ajax="1">
  *         <input type="text" name="name" value="Fangxin Jiang"/>
  *         <input type="text" name="age" value="22"/>
@@ -83,8 +84,9 @@ class Ajax extends Widget
      */
     public $options = [];
     /**
-     * @var string The jQuery selector of the links that should trigger ajax requests.
-     * If not set, all links with `data-ajax` attribute within the enclosed content of Ajax will trigger ajax requests.
+     * @var string The jQuery selector of the tags that should trigger ajax requests.
+     * If not set, all tags (except form) with `data-ajax` attribute within the enclosed content of Ajax will trigger
+     * ajax requests.
      */
     public $linkSelector;
     /**
@@ -120,6 +122,9 @@ class Ajax extends Widget
 
     /**
      * Generate a json object that jQuery Ajax needed.
+     * In this method, we will add several extra javascript method to get the jQuery Ajax param's value form html tags'
+     * attributes. We've defined some attributes for those frequently-used jQuery Ajax params. Such as: url, method,
+     * data and so on. Usage: `<button data-url="post.php" ajax-data="name=Fangxin Jiang&age=22">Button</button>`
      * @return string Json Object.
      */
     public function generateClientOptions() {
@@ -139,10 +144,10 @@ class Ajax extends Widget
         ];
         foreach($helpers as $key => $method) {
             if(isset($this->clientOptions[$key])) {
-                if($this->clientOptions[$key] instanceof JsExpression) {
-                    $this->clientOptions[$key] = new JsExpression($method . ' | ' . $this->clientOptions[$key]);
-                } else {
-                    $this->clientOptions[$key] = new JsExpression($method . ' | "' . $this->clientOptions[$key] . '"');
+                if(is_string($this->clientOptions[$key])) {
+                    $this->clientOptions[$key] = new JsExpression($method . '||"' . $this->clientOptions[$key] . '"');
+                } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string type.
+                    $this->clientOptions[$key] = new JsExpression($method . '||' . $this->clientOptions[$key]);
                 }
             } else {
                 $this->clientOptions[$key] = new JsExpression($method);
@@ -163,8 +168,8 @@ class Ajax extends Widget
         $view = $this->getView();
         JqueryAsset::register($view);
         AjaxAsset::register($view);
-        $js = "jQuery('$linkSelector').click(function() {\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
-        $js .= "\njQuery(document).on('submit', '$formSelector', function() {\njQuery.ajax(ajaxHelper.filter(\n$options\n));\nreturn false;\n});";
+        $js = "jQuery('$linkSelector').click(function() {jQuery.ajax(ajaxHelper.filter($options));return false;});";
+        $js .= "\njQuery(document).on('submit', '$formSelector', function() {jQuery.ajax(ajaxHelper.filter($options));return false;});";
         $view->registerJs($js);
     }
 }
