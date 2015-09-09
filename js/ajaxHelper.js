@@ -82,6 +82,7 @@ var ajaxHelper = {
         for(var i=0; i<arguments.length; i++) {
             if(arguments[i] !== null) return arguments[i];
         }
+        return null;
     },
     filter: function(json) {
         var result = {};
