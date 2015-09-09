@@ -128,7 +128,7 @@ class Ajax extends Widget
      * @return string Json Object.
      */
     public function generateClientOptions() {
-        $helpers = [
+        $local = [
             'url' => 'ajaxHelper.getUrl(this)',                 //`ajax-url|href|action`
             'method' => 'ajaxHelper.getMethod(this)',           //`ajax-method|method`
             'data' => 'ajaxHelper.getData(this)',               //`ajax-data`
@@ -142,16 +142,19 @@ class Ajax extends Widget
             'cache' => 'ajaxHelper.getCache(this)',             //`ajax-cache`
             'timeout' => 'ajaxHelper.getTimeout(this)'          //`ajax-timeout`
         ];
-        foreach($helpers as $key => $method) {
-            if(isset($this->clientOptions[$key])) {
+        foreach($local as $key => $method) {
+            if(isset($this->clientOptions[$key]) && $this->clientOptions[$key] !== null) {
                 if(is_string($this->clientOptions[$key])) {
-                    $this->clientOptions[$key] = new JsExpression($method . '||"' . $this->clientOptions[$key] . '"');
-                } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string type.
-                    $this->clientOptions[$key] = new JsExpression($method . '||' . $this->clientOptions[$key]);
+                    $this->clientOptions[$key] = $method . ',"' . $this->clientOptions[$key] . '"';
+                } else if(is_bool($this->clientOptions[$key])) {
+                    $this->clientOptions[$key] = $method . ',' . ($this->clientOptions[$key] ? 'true' : 'false');
+                } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string and non bool type.
+                    $this->clientOptions[$key] = $method . ',' . $this->clientOptions[$key];
                 }
             } else {
-                $this->clientOptions[$key] = new JsExpression($method);
+                $this->clientOptions[$key] = $method;
             }
+            $this->clientOptions[$key] = new JsExpression($method);
         }
         $default = [
             'method' => 'ajaxHelper.getMethod_default(this)',
@@ -159,15 +162,18 @@ class Ajax extends Widget
             'contentType' => 'ajaxHelper.getContentType_default(this)'
         ];
         foreach($default as $key => $method) {
-            if(isset($this->clientOptions[$key])) {
+            if(isset($this->clientOptions[$key]) && $this->clientOptions[$key] !== null) {
                 if(is_string($this->clientOptions[$key])) {
-                    $this->clientOptions[$key] = new JsExpression('"' . $this->clientOptions[$key]. '"||' . $method);
-                } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string type.
-                    $this->clientOptions[$key] = new JsExpression($this->clientOptions[$key] . '||' . $method);
+                    $this->clientOptions[$key] = '"' . $this->clientOptions[$key]. '",' . $method;
+                } else if(is_bool($this->clientOptions[$key])) {
+                    $this->clientOptions[$key] = ($this->clientOptions[$key] ? 'true' : 'false') . ',' . $method;
+                } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string and non bool type.
+                    $this->clientOptions[$key] = $this->clientOptions[$key] . ',' . $method;
                 }
             } else {
-                $this->clientOptions[$key] = new JsExpression($method);
+                $this->clientOptions[$key] = $method;
             }
+            $this->clientOptions[$key] = new JsExpression($method);
         }
         return Json::encode($this->clientOptions);
     }

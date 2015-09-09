@@ -78,6 +78,11 @@ var ajaxHelper = {
     getTimeout: function(elem) {
         return $(elem).attr("ajax-timeout") ? eval("(false || " + $(elem).attr("ajax-timeout") + ")") : null;
     },
+    priority: function() {
+        for(var i=0; i<arguments.length; i++) {
+            if(arguments[i] !== null) return arguments[i];
+        }
+    },
     filter: function(json) {
         var result = {};
         for(var i in json) {
