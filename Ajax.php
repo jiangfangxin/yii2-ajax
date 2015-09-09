@@ -154,7 +154,7 @@ class Ajax extends Widget
             } else {
                 $this->clientOptions[$key] = $method;
             }
-            $this->clientOptions[$key] = new JsExpression($method);
+            $this->clientOptions[$key] = new JsExpression($this->clientOptions[$key]);
         }
         $default = [
             'method' => 'ajaxHelper.getMethod_default(this)',
@@ -168,12 +168,14 @@ class Ajax extends Widget
                 } else if(is_bool($this->clientOptions[$key])) {
                     $this->clientOptions[$key] = ($this->clientOptions[$key] ? 'true' : 'false') . ',' . $method;
                 } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string and non bool type.
+                    if($this->clientOptions[$key] instanceof JsExpression)
+                        $this->clientOptions[$key] = preg_replace('/;$/', '', $this->clientOptions[$key]->expression);
                     $this->clientOptions[$key] = $this->clientOptions[$key] . ',' . $method;
                 }
             } else {
                 $this->clientOptions[$key] = $method;
             }
-            $this->clientOptions[$key] = new JsExpression($method);
+            $this->clientOptions[$key] = new JsExpression('ajaxHelper.priority(' . $this->clientOptions[$key] . ')');
         }
         return Json::encode($this->clientOptions);
     }
