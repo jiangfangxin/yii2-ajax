@@ -165,7 +165,7 @@ class Ajax extends Widget
                     $this->clientOptions[$key] = $local . $this->clientOptions[$key] . $default;
                 }
             } else {
-                $this->clientOptions[$key] = $local . $default;
+                $this->clientOptions[$key] = $local . 'null' . $default;
             }
             $this->clientOptions[$key] = new JsExpression('ajaxHelper.priority(' . $this->clientOptions[$key] . ')');
         }
