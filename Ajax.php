@@ -128,52 +128,44 @@ class Ajax extends Widget
      * @return string Json Object.
      */
     public function generateClientOptions() {
-        $local = [
-            'url' => 'ajaxHelper.getUrl(this)',                 //`ajax-url|href|action`
-            'method' => 'ajaxHelper.getMethod(this)',           //`ajax-method|method`
-            'data' => 'ajaxHelper.getData(this)',               //`ajax-data`
-            'dataType' => 'ajaxHelper.getDataType(this)',       //`ajax-dataType`
-            'processData' => 'ajaxHelper.getProcessData(this)', //`ajax-processData`
-            'contentType' => 'ajaxHelper.getContentType(this)', //`ajax-contentType`
-            'success' => 'ajaxHelper.getSuccess(this)',         //`ajax-success`
-            'error' => 'ajaxHelper.getError(this)',             //`ajax-error`
-            'beforeSend' => 'ajaxHelper.getBeforeSend(this)',   //`ajax-beforeSend`
-            'complete' => 'ajaxHelper.getComplete(this)',       //`ajax-complete`
-            'cache' => 'ajaxHelper.getCache(this)',             //`ajax-cache`
-            'timeout' => 'ajaxHelper.getTimeout(this)'          //`ajax-timeout`
+        $helpers = [
+            'url' => ['local'=>'ajaxHelper.getUrl(this)'],              //`ajax-url|href|action`
+            'method' => [                                               //`ajax-method|method`
+                'local'=>'ajaxHelper.getMethod(this)',
+                'default'=>'ajaxHelper.getMethod_default(this)'
+            ],
+            'data' => ['local'=>'ajaxHelper.getData(this)'],            //`ajax-data`
+            'dataType' => ['local'=>'ajaxHelper.getDataType(this)'],    //`ajax-dataType`
+            'processData' => [                                          //`ajax-processData`
+                'local'=>'ajaxHelper.getProcessData(this)',
+                'default'=>'ajaxHelper.getProcessData_default(this)'
+            ],
+            'contentType' => [                                          //`ajax-contentType`
+                'local'=>'ajaxHelper.getContentType(this)',
+                'default'=>'ajaxHelper.getContentType_default(this)'
+            ],
+            'success' => ['local'=>'ajaxHelper.getSuccess(this)'],      //`ajax-success`
+            'error' => ['local'=>'ajaxHelper.getError(this)'],          //`ajax-error`
+            'beforeSend' => ['local'=>'ajaxHelper.getBeforeSend(this)'],//`ajax-beforeSend`
+            'complete' => ['local'=>'ajaxHelper.getComplete(this)'],    //`ajax-complete`
+            'cache' => ['local'=>'ajaxHelper.getCache(this)'],          //`ajax-cache`
+            'timeout' => ['local'=>'ajaxHelper.getTimeout(this)']       //`ajax-timeout`
         ];
-        foreach($local as $key => $method) {
+        foreach($helpers as $key => $method) {
+            $local = isset($method['local']) ? $method['local'] . ',' : '';
+            $default = isset($method['default']) ? ',' .$method['default'] : '';
             if(isset($this->clientOptions[$key]) && $this->clientOptions[$key] !== null) {
                 if(is_string($this->clientOptions[$key])) {
-                    $this->clientOptions[$key] = $method . ',"' . $this->clientOptions[$key] . '"';
+                    $this->clientOptions[$key] = $local . '"' . $this->clientOptions[$key] . '"' . $default;
                 } else if(is_bool($this->clientOptions[$key])) {
-                    $this->clientOptions[$key] = $method . ',' . ($this->clientOptions[$key] ? 'true' : 'false');
-                } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string and non bool type.
-                    $this->clientOptions[$key] = $method . ',' . $this->clientOptions[$key];
-                }
-            } else {
-                $this->clientOptions[$key] = $method;
-            }
-            $this->clientOptions[$key] = new JsExpression($this->clientOptions[$key]);
-        }
-        $default = [
-            'method' => 'ajaxHelper.getMethod_default(this)',
-            'processData' => 'ajaxHelper.getProcessData_default(this)',
-            'contentType' => 'ajaxHelper.getContentType_default(this)'
-        ];
-        foreach($default as $key => $method) {
-            if(isset($this->clientOptions[$key]) && $this->clientOptions[$key] !== null) {
-                if(is_string($this->clientOptions[$key])) {
-                    $this->clientOptions[$key] = '"' . $this->clientOptions[$key]. '",' . $method;
-                } else if(is_bool($this->clientOptions[$key])) {
-                    $this->clientOptions[$key] = ($this->clientOptions[$key] ? 'true' : 'false') . ',' . $method;
+                    $this->clientOptions[$key] = $local . ($this->clientOptions[$key] ? 'true' : 'false') . $default;
                 } else {    //Type of `$this->clientOptions[$key]` is `JsExpression` or other non string and non bool type.
                     if($this->clientOptions[$key] instanceof JsExpression)
                         $this->clientOptions[$key] = preg_replace('/;$/', '', $this->clientOptions[$key]->expression);
-                    $this->clientOptions[$key] = $this->clientOptions[$key] . ',' . $method;
+                    $this->clientOptions[$key] = $local . $this->clientOptions[$key] . $default;
                 }
             } else {
-                $this->clientOptions[$key] = $method;
+                $this->clientOptions[$key] = $local . $default;
             }
             $this->clientOptions[$key] = new JsExpression('ajaxHelper.priority(' . $this->clientOptions[$key] . ')');
         }
