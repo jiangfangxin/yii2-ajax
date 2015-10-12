@@ -102,6 +102,20 @@ Actually you can also use Ajax widget to upload files, just add an input like `<
 ## More tutorials
 See [Home wiki](https://github.com/smallbearsoft/yii2-ajax/wiki/Home) for more tutorials.
 
+## Tips
+
+To trigger the Ajax widget, you can use a submit button or a jquery submit() function. But cannot use the pure javascript submit() function to trigger it.
+You can use:
+```
+<button type="submit">Submit</button> (In your form)
+---OR---
+$("#my-id").submit()
+```
+Cannot use:
+```
+document.getElementById("#my-id").submit()
+```
+
 ## Installation
 The preferred way to install this extension is through composer.
 
