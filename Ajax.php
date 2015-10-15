@@ -79,6 +79,10 @@ use smallbearsoft\ajax\AjaxAsset;
 class Ajax extends Widget
 {
     /**
+     * @var string The HTML container tag.
+     */
+    public $tag = 'div';
+    /**
      * @var array The HTML attributes for the widget container tag.
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
@@ -108,7 +112,7 @@ class Ajax extends Widget
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
-        echo Html::beginTag('div', $this->options);
+        echo Html::beginTag($this->tag, $this->options);
     }
 
     /**
@@ -116,7 +120,7 @@ class Ajax extends Widget
      */
     public function run()
     {
-        echo Html::endTag('div');
+        echo Html::endTag($this->tag);
         $this->registerClientScript();
     }
 
@@ -184,7 +188,7 @@ class Ajax extends Widget
         $view = $this->getView();
         JqueryAsset::register($view);
         AjaxAsset::register($view);
-        $js = "jQuery('$linkSelector').click(function() {jQuery.ajax(ajaxHelper.filter($options));return false;});";
+        $js = "jQuery('$linkSelector').click(function() {jQuery.ajax(ajaxHelper.filter($options));return this.tagName.toLowerCase()=="a" ? false : true;});";
         $js .= "\njQuery(document).on('submit', '$formSelector', function() {jQuery.ajax(ajaxHelper.filter($options));return false;});";
         $view->registerJs($js);
     }
